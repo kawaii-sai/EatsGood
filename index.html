@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EatsGood - Food Delivery</title>
+    <style>
+        :root {
+            --primary: #00ccbc;
+            --primary-dark: #00a396;
+            --secondary: #2e3333;
+            --light: #f5f5f5;
+            --white: #ffffff;
+            --gray: #737373;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--secondary);
+            line-height: 1.5;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 30px;
+            margin-right: 0.5rem;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 2rem;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        .cart {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Categories */
+        .categories {
+            background-color: var(--white);
+            padding: 1rem 0;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .categories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .category {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background-color: var(--light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .category.active {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* Restaurants Grid */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .restaurants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .restaurant-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .restaurant-image {
+            height: 180px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .restaurant-info {
+            padding: 1.5rem;
+        }
+
+        .restaurant-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .restaurant-details {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .restaurant-description {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .add-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .add-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background-color: var(--white);
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            z-index: 200;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            margin-bottom: 2rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-item-quantity {
+            margin-right: 1rem;
+            color: var(--gray);
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            margin-right: 1rem;
+        }
+
+        .quantity-btn {
+            background-color: var(--light);
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item-price {
+            font-weight: bold;
+        }
+
+        .remove-item {
+            color: var(--primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .checkout-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: var(--gray);
+            margin-top: 2rem;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 150;
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: var(--white);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            z-index: 200;
+            padding: 2rem;
+        }
+
+        .mobile-nav.active {
+            left: 0;
+        }
+
+        .mobile-nav-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-nav-links {
+            margin-top: 2rem;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            text-decoration: none;
+            color: var(--secondary);
+        }
+
+        /* Menu Styles */
+        .menu-section {
+            margin-top: 3rem;
+        }
+
+        .menu-category {
+            margin-bottom: 2.5rem;
+        }
+
+        .menu-category h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            color: var(--secondary);
+        }
+
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .menu-item {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            box-shadow: var(--shadow);
+        }
+
+        .menu-item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 1rem;
+        }
+
+        .menu-item-info {
+            flex: 1;
+        }
+
+        .menu-item-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item-description {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .menu-item-price {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .restaurants-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+
+            .cart-sidebar {
+                width: 350px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-bar {
+                display: none;
+            }
+
+            .cart-text {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .categories-container {
+                padding: 0 1rem;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .cart-sidebar.active {
+                right: 0;
+            }
+
+            .menu-item {
+                flex-direction: column;
+            }
+
+            .menu-item-image {
+                width: 100%;
+                height: 150px;
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .restaurants-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .menu-items {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <button class="mobile-menu-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 12H21" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 6H21" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 18H21" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            
+            <a href="#" class="logo">
+                <img src="logo/EATS.png" alt="Food delivery app logo with green spoon and fork icon" />
+                GoodEats
+            </a>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search for restaurants or dishes...">
+            </div>
+            
+            <div class="cart">
+                <span class="cart-text">Cart</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.09191 15.264 8.55194 15.4891C9.01197 15.7143 9.54747 15.7251 10.016 15.5182L19.02 11.71C19.6429 11.4354 20.3191 11.3378 20.9805 11.4264C21.6418 11.515 22.2612 11.7865 22.7662 12.2097C23.2711 12.6329 23.6398 13.1893 23.8274 13.811C24.0151 14.4328 24.0136 15.0924 23.8231 15.7133C23.6326 16.3343 23.2615 16.8889 22.7549 17.3095C22.2482 17.7301 21.6285 17.9984 20.9685 18.0825C20.3084 18.1666 19.6355 18.0632 19.03 17.784L7.82 12.7" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="mobile-nav">
+        <button class="mobile-nav-close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 6L18 18" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        
+        <div class="mobile-nav-links">
+            <a href="#" class="mobile-nav-link">Home</a>
+            <a href="#" class="mobile-nav-link">Restaurants</a>
+            <a href="#" class="mobile-nav-link">My Orders</a>
+            <a href="#" class="mobile-nav-link">Account</a>
+            <a href="#" class="mobile-nav-link">Help</a>
+        </div>
+    </div>
+    
+    <div class="overlay"></div>
+    
+    <section class="hero">
+        <h1>Your favorite food, delivered</h1>
+        <p>Order from the best restaurants in your city and get it delivered fast to your doorstep</p>
+    </section>
+    
+    <section class="categories">
+        <div class="categories-container">
+            <div class="category active" data-category="all">All</div>
+            <div class="category" data-category="burger">Burger</div>
+            <div class="category" data-category="pizza">Pizza</div>
+            <div class="category" data-category="sushi">Sushi</div>
+            <div class="category" data-category="drinks">Drinks</div>
+            <div class="category" data-category="dessert">Dessert</div>
+            <div class="category" data-category="asian">Asian</div>
+            <div class="category" data-category="filipino">Filipino</div>
+        </div>
+    </section>
+    
+    <main class="main-content">
+        <h2 class="section-title">Popular near you</h2>
+        
+        <div class="restaurants-grid" id="restaurants-grid">
+            <!-- Restaurant cards will be added dynamically -->
+        </div>
+    </main>
+    
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6 6L18 18" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="cart-items">
+            <!-- Cart items will be added dynamically -->
+        </div>
+        
+        <div class="cart-total">
+            <span>Total</span>
+            <span id="cart-total">$0.00</span>
+        </div>
+        
+        <button class="checkout-btn">Checkout</button>
+    </div>
+    
+    <script>
+        // Sample data for restaurants
+        const restaurants = [
+            {
+                id: 1,
+                name: "BigZ Burger",
+                rating: 4.5,
+                reviews: 250,
+                priceRange: "$10-20",
+                deliveryTime: "20-30 min",
+                description: "Gourmet burgers made with premium ingredients and served with crispy fries",
+                category: "burger",
+                image: "https://placehold.co/600x400?text=BigZ+Burger",
+                menu: [
+                    {
+                        id: 101,
+                        name: "Classic Cheeseburger",
+                        description: "Juicy beef patty with cheddar cheese, lettuce, tomato, and special sauce",
+                        price: 12.99,
+                        image: "https://placehold.co/200x200?text=Cheeseburger"
+                    },
+                    {
+                        id: 102,
+                        name: "Crispy Chicken Burger",
+                        description: "Beef patty with crispy bacon, fresh avocado, and Swiss cheese",
+                        price: 15.99,
+                        image: "https://placehold.co/200x200?text=Crispy Chicken+Burger"
+                    },
+                    {
+                        id: 103,
+                        name: "Sisig Burger",
+                        description: "Beef patty with sautéed mushrooms, Swiss cheese, and garlic aioli",
+                        price: 14.99,
+                        image: "https://placehold.co/200x200?text=Sisig+Burger"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: "Angels Pizza",
+                rating: 4.7,
+                reviews: 350,
+                priceRange: "$15-30",
+                deliveryTime: "25-40 min",
+                description: "Authentic Italian pizzas cooked in a wood-fired oven with imported ingredients",
+                category: "pizza",
+                image: "https://placehold.co/600x400?text=Angels+Pizza",
+                menu: [
+                    {
+                        id: 201,
+                        name: "Margherita Pizza",
+                        description: "Classic pizza with tomato sauce, fresh mozzarella, and basil",
+                        price: 16.99,
+                        image: "https://placehold.co/200x200?text=Margherita"
+                    },
+                    {
+                        id: 202,
+                        name: "Pepperoni Pizza",
+                        description: "Tomato sauce, mozzarella, and generous pepperoni toppings",
+                        price: 18.99,
+                        image: "https://placehold.co/200x200?text=Pepperoni"
+                    },
+                    {
+                        id: 203,
+                        name: "Quattro Formaggi",
+                        description: "Four cheese blend with mozzarella, gorgonzola, parmesan, and ricotta",
+                        price: 19.99,
+                        image: "https://placehold.co/200x200?text=4+Cheese"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                name: "SINEAYAHSHA",
+                rating: 4.8,
+                reviews: 420,
+                priceRange: "$20-40",
+                deliveryTime: "30-45 min",
+                description: "Fresh sushi and sashimi prepared by expert chefs with daily imports from Japan",
+                category: "sushi",
+                image: "https://placehold.co/600x400?text=SINEAYAHSHA",
+                menu: [
+                    {
+                        id: 301,
+                        name: "California Roll",
+                        description: "Crab, avocado, and cucumber wrapped in seaweed and rice",
+                        price: 12.99,
+                        image: "https://placehold.co/200x200?text=California+Roll"
+                    },
+                    {
+                        id: 302,
+                        name: "Salmon Nigiri",
+                        description: "Fresh slices of salmon on pressed sushi rice",
+                        price: 14.99,
+                        image: "https://placehold.co/200x200?text=Salmon+Nigiri"
+                    },
+                    {
+                        id: 303,
+                        name: "Dragon Roll",
+                        description: "Eel and cucumber inside, avocado and eel sauce on top",
+                        price: 18.99,
+                        image: "https://placehold.co/200x200?text=Dragon+Roll"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                name: "COCO",
+                rating: 4.4,
+                reviews: 180,
+                priceRange: "$12-25",
+                deliveryTime: "15-25 min",
+                description: "Refreshing sweet and healthy drinks to keep you cool",
+                category: "drinks",
+                image: "https://placehold.co/600x400?text=COCO",
+                menu: [
+                    {
+                        id: 401,
+                        name: "Caesar Salad",
+                        description: "Romaine, parmesan, croutons with creamy caesar dressing",
+                        price: 12.99,
+                        image: "https://placehold.co/200x200?text=Caesar+Salad"
+                    },
+                    {
+                        id: 402,
+                        name: "Greek Salad",
+                        description: "Mixed greens with feta, olives, tomatoes, and cucumber",
+                        price: 13.99,
+                        image: "https://placehold.co/200x200?text=Greek+Salad"
+                    },
+                    {
+                        id: 403,
+                        name: "Harvest Bowl",
+                        description: "Quinoa, roasted vegetables, goat cheese, and balsamic glaze",
+                        price: 14.99,
+                        image: "https://placehold.co/200x200?text=Harvest+Bowl"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                name: "CocoPan",
+                rating: 4.9,
+                reviews: 520,
+                priceRange: "$8-20",
+                deliveryTime: "15-30 min",
+                description: "Artisan desserts and pastries made fresh daily with premium ingredients",
+                category: "dessert",
+                image: "https://placehold.co/600x400?text=CocoPan",
+                menu: [
+                    {
+                        id: 501,
+                        name: "Coffee Bun",
+                        description: "a light and pillow bread filled with butter and topped with a thin layer of crunchy coffee-flavored cookie crust.",
+                        price: 9.99,
+                        image: "https://placehold.co/200x200?text=Lava+Cake"  
+                    },
+                    {
+                        id: 502,
+                        name: "Cinnamon Roll",
+                        description: "sweet pastry made from a rolled sheet of dough that is spread with a mixture of cinnamon and sugar, often combined with butter",
+                        price: 8.99,
+                        image: "https://placehold.co/200x200?text=Tiramisu"
+                    },
+                    {
+                        id: 503,
+                        name: "Donut",
+                        description: "New York style cheesecake with berry compote",
+                        price: 7.99,
+                        image: "https://placehold.co/200x200?text=Cheesecake"
+                    }
+                ]
+            }
+            
+        ];
+
+        // Global variables
+        let currentRestaurant = null;
+        let cartItems = [];
+        let currentCategory = "all";
+
+        // DOM elements
+        const restaurantsGrid = document.getElementById("restaurants-grid");
+        const cartItemsContainer = document.querySelector(".cart-items");
+        const cartTotalElement = document.getElementById("cart-total");
+        const cartCount = document.querySelector(".cart-count");
+        const overlay = document.querySelector(".overlay");
+        const mobileNav = document.querySelector(".mobile-nav");
+        const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+        const mobileNavClose = document.querySelector(".mobile-nav-close");
+        const cartSidebar = document.querySelector(".cart-sidebar");
+        const cartBtn = document.querySelector(".cart");
+        const closeCartBtn = document.querySelector(".close-cart");
+        const categories = document.querySelectorAll(".category");
+        const checkoutBtn = document.querySelector(".checkout-btn");
+
+        // Initialize the app
+        function init() {
+            renderRestaurants();
+            setupEventListeners();
+        }
+
+        // Render restaurants based on current category
+        function renderRestaurants() {
+            restaurantsGrid.innerHTML = "";
+            
+            const filteredRestaurants = currentCategory === "all" 
+                ? restaurants 
+                : restaurants.filter(r => r.category === currentCategory);
+            
+            filteredRestaurants.forEach(restaurant => {
+                const restaurantCard = createRestaurantCard(restaurant);
+                restaurantsGrid.appendChild(restaurantCard);
+            });
+        }
+
+        // Create restaurant card element
+        function createRestaurantCard(restaurant) {
+            const card = document.createElement("div");
+            card.className = "restaurant-card";
+            card.innerHTML = `
+                <img src="${restaurant.image}" alt="${restaurant.name}" class="restaurant-image">
+                <div class="restaurant-info">
+                    <h3 class="restaurant-name">${restaurant.name}</h3>
+                    <div class="restaurant-details">
+                        <span>★ ${restaurant.rating} (${restaurant.reviews}+)</span>
+                        <span>${restaurant.priceRange}</span>
+                    </div>
+                    <p class="restaurant-description">${restaurant.description}</p>
+                    <button class="add-btn" data-id="${restaurant.id}">Order Now</button>
+                </div>
+            `;
+            return card;
+        }
+
+        // Show restaurant menu
+        function showRestaurantMenu(restaurantId) {
+            const restaurant = restaurants.find(r => r.id === restaurantId);
+            if (!restaurant) return;
+            
+            currentRestaurant = restaurant;
+            
+            // Update main content to show menu
+            const mainContent = document.querySelector(".main-content");
+            mainContent.innerHTML = `
+                <div class="restaurant-header">
+                    <button id="back-to-restaurants" class="back-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 18L9 12L15 6" stroke="#2e3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Back to restaurants
+                    </button>
+                    <h2 class="section-title">${restaurant.name}</h2>
+                    <div class="restaurant-meta">
+                        <span>★ ${restaurant.rating} (${restaurant.reviews}+ reviews)</span>
+                        <span>•</span>
+                        <span>${restaurant.priceRange}</span>
+                        <span>•</span>
+                        <span>${restaurant.deliveryTime} delivery</span>
+                    </div>
+                </div>
+                <div class="menu-section" id="menu-section"></div>
+            `;
+            
+            // Render menu items
+            const menuSection = document.getElementById("menu-section");
+            restaurant.menu.forEach(item => {
+                const menuItem = document.createElement("div");
+                menuItem.className = "menu-item";
+                menuItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="menu-item-image">
+                    <div class="menu-item-info">
+                        <h4 class="menu-item-name">${item.name}</h4>
+                        <p class="menu-item-description">${item.description}</p>
+                        <p class="menu-item-price">$${item.price.toFixed(2)}</p>
+                        <button class="add-btn" data-restaurant-id="${restaurant.id}" data-item-id="${item.id}">Add to cart</button>
+                    </div>
+                `;
+                menuSection.appendChild(menuItem);
+            });
+            
+            // Add back button event
+            document.getElementById("back-to-restaurants").addEventListener("click", () => {
+                currentRestaurant = null;
+                renderRestaurants();
+                document.querySelector(".main-content").innerHTML = `
+                    <h2 class="section-title">Popular near you</h2>
+                    <div class="restaurants-grid" id="restaurants-grid"></div>
+                `;
+                restaurantsGrid = document.getElementById("restaurants-grid");
+                renderRestaurants();
+            });
+            
+            // Add menu item click events
+            document.querySelectorAll('.add-btn[data-item-id]').forEach(btn => {
+                btn.addEventListener('click', addToCartFromMenu);
+            });
+        }
+
+        // Add to cart from restaurant grid
+        function addToCart(event) {
+            const restaurantId = parseInt(event.target.getAttribute("data-id"));
+            // For simplicity, we're adding the first item from the restaurant's menu
+            const restaurant = restaurants.find(r => r.id === restaurantId);
+            if (!restaurant || !restaurant.menu.length) return;
+            
+            const menuItem = restaurant.menu[0];
+            
+            const existingItem = cartItems.find(i => 
+                i.restaurantId === restaurantId && i.itemId === menuItem.id
+            );
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    restaurantId,
+                    restaurantName: restaurant.name,
+                    itemId: menuItem.id,
+                    itemName: menuItem.name,
+                    price: menuItem.price,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            
+            // Animation feedback
+            event.target.textContent = "Added!";
+            setTimeout(() => {
+                event.target.textContent = "Order Now";
+            }, 1000);
+        }
+
+        // Add to cart from menu
+        function addToCartFromMenu(event) {
+            const restaurantId = parseInt(event.target.getAttribute("data-restaurant-id"));
+            const itemId = parseInt(event.target.getAttribute("data-item-id"));
+            
+            const restaurant = restaurants.find(r => r.id === restaurantId);
+            if (!restaurant) return;
+            
+            const menuItem = restaurant.menu.find(i => i.id === itemId);
+            if (!menuItem) return;
+            
+            const existingItem = cartItems.find(i => 
+                i.restaurantId === restaurantId && i.itemId === itemId
+            );
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    restaurantId,
+                    restaurantName: restaurant.name,
+                    itemId,
+                    itemName: menuItem.name,
+                    price: menuItem.price,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            
+            // Animation feedback
+            event.target.textContent = "Added!";
+            setTimeout(() => {
+                event.target.textContent = "Add to cart";
+            }, 1000);
+        }
+
+        // Update cart UI
+        function updateCart() {
+            // Update count
+            const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = itemCount;
+            
+            // Update cart items
+            cartItemsContainer.innerHTML = "";
+            
+            if (cartItems.length === 0) {
+                cartItemsContainer.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+                cartTotalElement.textContent = "$0.00";
+                return;
+            }
+            
+            let total = 0;
+            
+            cartItems.forEach(item => {
+                total += item.price * item.quantity;
+                
+                const itemElement = document.createElement("div");
+                itemElement.className = "cart-item";
+                itemElement.innerHTML = `
+                    <div class="cart-item-info">
+                        <div class="cart-item-controls">
+                            <button class="quantity-btn decrease" data-id="${item.itemId}" data-restaurant-id="${item.restaurantId}">-</button>
+                            <span class="cart-item-quantity">${item.quantity}x</span>
+                            <button class="quantity-btn increase" data-id="${item.itemId}" data-restaurant-id="${item.restaurantId}">+</button>
+                        </div>
+                        <span class="cart-item-name">${item.itemName}</span>
+                    </div>
+                    <span class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</span>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+            });
+            
+            // Update total
+            cartTotalElement.textContent = `$${total.toFixed(2)}`;
+            
+            // Add event listeners to quantity buttons
+            document.querySelectorAll('.decrease').forEach(btn => {
+                btn.addEventListener('click', decreaseQuantity);
+            });
+            
+            document.querySelectorAll('.increase').forEach(btn => {
+                btn.addEventListener('click', increaseQuantity);
+            });
+        }
+
+        // Decrease item quantity
+        function decreaseQuantity(event) {
+            const itemId = parseInt(event.target.getAttribute("data-id"));
+            const restaurantId = parseInt(event.target.getAttribute("data-restaurant-id"));
+            
+            const itemIndex = cartItems.findIndex(i => 
+                i.itemId === itemId && i.restaurantId === restaurantId
+            );
+            
+            if (itemIndex === -1) return;
+            
+            if (cartItems[itemIndex].quantity > 1) {
+                cartItems[itemIndex].quantity -= 1;
+            } else {
+                cartItems.splice(itemIndex, 1);
+            }
+            
+            updateCart();
+        }
+
+        // Increase item quantity
+        function increaseQuantity(event) {
+            const itemId = parseInt(event.target.getAttribute("data-id"));
+            const restaurantId = parseInt(event.target.getAttribute("data-restaurant-id"));
+            
+            const item = cartItems.find(i => 
+                i.itemId === itemId && i.restaurantId === restaurantId
+            );
+            
+            if (item) {
+                item.quantity += 1;
+                updateCart();
+            }
+        }
+
+        // Handle checkout
+        function checkout() {
+            if (cartItems.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            
+            // In a real app, you would redirect to checkout or show a checkout form
+            alert(`Order placed! Total: $${calculateTotal().toFixed(2)}`);
+            cartItems = [];
+            updateCart();
+        }
+
+        // Calculate cart total
+        function calculateTotal() {
+            return cartItems.reduce((total, item) => {
+                return total + (item.price * item.quantity);
+            }, 0);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Mobile menu toggle
+            mobileMenuBtn.addEventListener("click", () => {
+                mobileNav.classList.add("active");
+                overlay.classList.add("active");
+            });
+            
+            mobileNavClose.addEventListener("click", () => {
+                mobileNav.classList.remove("active");
+                overlay.classList.remove("active");
+            });
+            
+            overlay.addEventListener("click", () => {
+                mobileNav.classList.remove("active");
+                overlay.classList.remove("active");
+                cartSidebar.classList.remove("active");
+            });
+            
+            // Cart toggle
+            cartBtn.addEventListener("click", () => {
+                cartSidebar.classList.add("active");
+                overlay.classList.add("active");
+            });
+            
+            closeCartBtn.addEventListener("click", () => {
+                cartSidebar.classList.remove("active");
+                overlay.classList.remove("active");
+            });
+            
+            // Category selection
+            categories.forEach(category => {
+                category.addEventListener("click", () => {
+                    document.querySelector(".category.active").classList.remove("active");
+                    category.classList.add("active");
+                    currentCategory = category.getAttribute("data-category");
+                    renderRestaurants();
+                });
+            });
+            
+            // Checkout button
+            checkoutBtn.addEventListener("click", checkout);
+            
+            // Add event delegation for restaurant cards (since they're dynamic)
+            document.addEventListener("click", (e) => {
+                if (e.target.classList.contains("add-btn") && e.target.hasAttribute("data-id") && !e.target.hasAttribute("data-item-id")) {
+                    addToCart(e);
+                }
+            });
+            
+            // Event delegation for restaurant clicks (we'll route to menu)
+            restaurantsGrid.addEventListener("click", (e) => {
+                const card = e.target.closest(".restaurant-card");
+                if (card) {
+                    const btn = card.querySelector(".add-btn");
+                    const restaurantId = parseInt(btn.getAttribute("data-id"));
+                    showRestaurantMenu(restaurantId);
+                }
+            });
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
